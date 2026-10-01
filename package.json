@@ -1,0 +1,35 @@
+{
+  "name": "@flashdata/mcp",
+  "version": "0.1.0",
+  "description": "FlashData MCP server for Google Search, YouTube data and media delivery to customer storage",
+  "license": "MIT",
+  "publishConfig": { "access": "public" },
+  "type": "commonjs",
+  "engines": { "node": ">=22.18.0" },
+  "bin": { "flashdata-mcp": "bin/flashdata-mcp.js" },
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./server": "./src/mcp/server.js",
+    "./tool-catalog": "./src/mcp/toolCatalog.js",
+    "./data-api-client": "./src/mcp/dataApiClient.js",
+    "./job-api-client": "./src/mcp/jobApiClient.js",
+    "./catalog": "./src/catalog/sourceCatalog.js",
+    "./download-options": "./src/download/youtubeDownloadOptions.js",
+    "./youtube-options": "./src/youtube/youtubeSearchOptions.js",
+    "./result-chunks": "./src/mcp/resultChunks.js"
+  },
+  "files": ["bin/", "src/", "LICENSE", "THIRD_PARTY_NOTICES.md", "README.md", "SECURITY.md"],
+  "scripts": {
+    "start": "node bin/flashdata-mcp.js",
+    "test": "node --test test/memory-store.test.js test/stdio.test.js test/http-security.test.js",
+    "test:install": "node scripts/test-install.js",
+    "check:package": "node scripts/check-package.js",
+    "prepack": "npm test && npm run check:package"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.30.0",
+    "ajv": "8.20.0",
+    "axios": "1.20.0"
+  }
+}

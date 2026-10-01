@@ -1,0 +1,11 @@
+node_modules/
+*.tgz
+.env
+.env.*
+coverage/
+test-results/
+.DS_Store
+*.log
+.npmrc
+*.pem
+*.key
