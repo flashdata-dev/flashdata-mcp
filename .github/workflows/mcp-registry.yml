@@ -50,12 +50,10 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    defaults:
-      run:
-        working-directory: ${{ runner.temp }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - name: Install pinned publisher
+        working-directory: ${{ runner.temp }}
         run: |
           curl --fail --silent --show-error --location --max-time 60 \
             'https://github.com/modelcontextprotocol/registry/releases/download/v1.8.1/mcp-publisher_linux_amd64.tar.gz' \
@@ -63,10 +61,13 @@ jobs:
           echo 'a06c9096dcb9727c13555b6be26c7effa707b01f06a4c561ba7a3635443cf2cc  mcp-publisher.tar.gz' | sha256sum --check
           tar -xzf mcp-publisher.tar.gz mcp-publisher
       - name: Authenticate with GitHub OIDC
+        working-directory: ${{ runner.temp }}
         run: ./mcp-publisher login github-oidc
       - name: Publish hosted service metadata
+        working-directory: ${{ runner.temp }}
         run: ./mcp-publisher publish "$GITHUB_WORKSPACE/registry/server.json"
       - name: Verify the published version
+        working-directory: ${{ runner.temp }}
         run: |
           python - <<'PY'
           import json
