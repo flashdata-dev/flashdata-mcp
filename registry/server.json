@@ -1,0 +1,23 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.flashdata-dev/flashdata",
+  "title": "FlashData",
+  "description": "Google Search, YouTube data and transcripts, and media downloads to your cloud storage.",
+  "version": "0.1.0",
+  "websiteUrl": "https://flashdata.dev/mcp",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://data.flashdata.dev/mcp",
+      "headers": [
+        {
+          "name": "X-API-Key",
+          "description": "Your FlashData API key from https://flashdata.dev/app/api-keys",
+          "isRequired": true,
+          "isSecret": true,
+          "format": "string"
+        }
+      ]
+    }
+  ]
+}

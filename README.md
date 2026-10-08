@@ -4,6 +4,12 @@ Use Google Search, YouTube data, and downloads to your cloud storage from an MCP
 
 This is a release candidate. Source code is available at [flashdata-dev/flashdata-mcp](https://github.com/flashdata-dev/flashdata-mcp). The package name `@flashdata/mcp` is provisional until publisher ownership is confirmed; this project has not been published to npm. Install from source using the steps below.
 
+To connect without running this local package, use the separate
+[FlashData hosted MCP service](https://flashdata.dev/mcp). Its
+[Official MCP Registry manifest and publishing instructions](https://github.com/flashdata-dev/flashdata-mcp/tree/main/registry)
+are maintained in this repository. The registration describes the hosted
+endpoint; it does not publish this local package to npm.
+
 This directory is a complete, standalone project. Use its contents as the root of your GitHub repository, including `.github/` and `.gitignore`. Installation and tests require no files from another checkout.
 
 ```text

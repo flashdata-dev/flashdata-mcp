@@ -1,0 +1,96 @@
+name: Official MCP Registry
+
+on:
+  push:
+    paths:
+      - 'registry/**'
+      - '.github/workflows/mcp-registry.yml'
+  pull_request:
+    paths:
+      - 'registry/**'
+      - '.github/workflows/mcp-registry.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Install schema validator
+        run: python -m pip install --disable-pip-version-check 'jsonschema==4.25.1'
+      - name: Validate against the official schema
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from urllib.request import urlopen
+          from jsonschema import Draft7Validator, FormatChecker
+
+          manifest = json.loads(Path('registry/server.json').read_text())
+          schema_url = 'https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json'
+          assert manifest['$schema'] == schema_url
+          with urlopen(schema_url, timeout=30) as response:
+              schema = json.load(response)
+          Draft7Validator(schema, format_checker=FormatChecker()).validate(manifest)
+          print(f"Validated {manifest['name']} version {manifest['version']}")
+          PY
+
+  publish:
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    concurrency:
+      group: official-mcp-registry-publish
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      id-token: write
+    defaults:
+      run:
+        working-directory: ${{ runner.temp }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Install pinned publisher
+        run: |
+          curl --fail --silent --show-error --location --max-time 60 \
+            'https://github.com/modelcontextprotocol/registry/releases/download/v1.8.1/mcp-publisher_linux_amd64.tar.gz' \
+            --output mcp-publisher.tar.gz
+          echo 'a06c9096dcb9727c13555b6be26c7effa707b01f06a4c561ba7a3635443cf2cc  mcp-publisher.tar.gz' | sha256sum --check
+          tar -xzf mcp-publisher.tar.gz mcp-publisher
+      - name: Authenticate with GitHub OIDC
+        run: ./mcp-publisher login github-oidc
+      - name: Publish hosted service metadata
+        run: ./mcp-publisher publish "$GITHUB_WORKSPACE/registry/server.json"
+      - name: Verify the published version
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          from urllib.parse import quote
+          from urllib.request import urlopen
+
+          manifest = json.loads((Path(os.environ['GITHUB_WORKSPACE']) / 'registry/server.json').read_text())
+          name = quote(manifest['name'], safe='')
+          version = quote(manifest['version'], safe='')
+          url = f'https://registry.modelcontextprotocol.io/v0.1/servers/{name}/versions/{version}'
+          with urlopen(url, timeout=30) as response:
+              published = json.load(response)
+          server = published['server']
+          for field in ('name', 'version', 'title', 'description', 'websiteUrl', 'remotes'):
+              assert server[field] == manifest[field], f'Published {field} differs from the manifest'
+          assert not server.get('packages'), 'Unexpected package registration'
+          official = published['_meta']['io.modelcontextprotocol.registry/official']
+          assert official['status'] == 'active'
+          print(json.dumps(published, indent=2))
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
+              summary.write(f"Published **{server['name']} {server['version']}**\n\n")
+              summary.write(f"- Registry response: {url}\n")
+              summary.write(f"- Published at: {official['publishedAt']}\n")
+              summary.write('- npm publication: not performed\n')
+          PY
