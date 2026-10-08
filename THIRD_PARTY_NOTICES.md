@@ -4,7 +4,7 @@ This package uses the following direct dependencies, installed separately by npm
 
 | Dependency | Version | License / copyright notice |
 | --- | --- | --- |
-| `@modelcontextprotocol/sdk` | 1.30.0 | MIT; Copyright (c) 2024 Anthropic, PBC |
+| `@modelcontextprotocol/sdk` | 1.31.0 | MIT; Copyright (c) 2024 Anthropic, PBC |
 | `axios` | 1.20.0 | MIT; Copyright (c) 2014-present Matt Zabriskie & Collaborators |
 | `ajv` | 8.20.0 | MIT; Copyright (c) 2015-2021 Evgeny Poberezkin |
 

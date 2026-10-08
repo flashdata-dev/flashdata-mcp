@@ -2,6 +2,12 @@
   "name": "@flashdata/mcp",
   "version": "0.1.0",
   "description": "FlashData MCP server for Google Search, YouTube data and media delivery to customer storage",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/flashdata-dev/flashdata-mcp.git"
+  },
+  "homepage": "https://github.com/flashdata-dev/flashdata-mcp#readme",
+  "bugs": { "url": "https://github.com/flashdata-dev/flashdata-mcp/issues" },
   "license": "MIT",
   "publishConfig": { "access": "public" },
   "type": "commonjs",
@@ -28,7 +34,7 @@
     "prepack": "npm test && npm run check:package"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "1.30.0",
+    "@modelcontextprotocol/sdk": "1.31.0",
     "ajv": "8.20.0",
     "axios": "1.20.0"
   }

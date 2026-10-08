@@ -2,7 +2,7 @@
 
 Use Google Search, YouTube data, and downloads to your cloud storage from an MCP client. This MIT-licensed package implements the tools and calls the FlashData REST APIs directly. It does not proxy a hosted MCP connection.
 
-This is a release candidate. The package name `@flashdata/mcp` is provisional until publisher ownership is confirmed; this checkout has not been published to npm. The repository URL will be added when the public repository is created.
+This is a release candidate. Source code is available at [flashdata-dev/flashdata-mcp](https://github.com/flashdata-dev/flashdata-mcp). The package name `@flashdata/mcp` is provisional until publisher ownership is confirmed; this project has not been published to npm. Install from source using the steps below.
 
 This directory is a complete, standalone project. Use its contents as the root of your GitHub repository, including `.github/` and `.gitignore`. Installation and tests require no files from another checkout.
 
@@ -23,9 +23,11 @@ SECURITY.md              vulnerability reporting and trust boundaries
 
 Requires Node.js 22.18 or newer and a FlashData API key from [your console](https://flashdata.dev/app/api-keys). The Management API must support `/v2/api-access` and its balance, pricing and limits routes. Deploy that server release before connecting this package to an older environment.
 
-From this project directory:
+Clone the repository and install its dependencies:
 
 ```sh
+git clone https://github.com/flashdata-dev/flashdata-mcp.git
+cd flashdata-mcp
 npm ci
 export FLASHDATA_API_KEY='YOUR_API_KEY'
 npm start
